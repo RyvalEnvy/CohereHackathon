@@ -16,11 +16,15 @@ def download_patent_text(patent_url: str) -> pd.DataFrame | None:
         description_paragraphs = soup.find_all(
             "div", {"class": "description-paragraph"}
         )
+        claims = soup.find_all("div", {"class": "claim-text"})
+
         if description_paragraphs:
-            patent_df = pd.DataFrame({"description_paragraphs": description_paragraphs})
-            patent_df["clean_paragraphs"] = patent_df.description_paragraphs.astype(
-                str
-            ).apply(lambda x: remove_text_between_angle_brackets(clean_text(x)))
+            patent_df = pd.DataFrame({"text": description_paragraphs + claims})
+
+            patent_df["clean_text"] = patent_df.text.astype(str).apply(
+                lambda x: remove_text_between_angle_brackets(clean_text(x))
+            )
+
             return patent_df
         else:
             print("Could not find patent text on the page.")

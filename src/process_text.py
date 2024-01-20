@@ -3,7 +3,6 @@ import cohere
 import numpy as np
 import pandas as pd
 import os
-from src.text_cleaning import remove_text_between_angle_brackets, clean_text
 from src.retrieve_documents import download_patent_text
 
 
@@ -23,12 +22,10 @@ def return_embeddings(
 def return_most_relevant_passage(input_passage: str, patent_number: str) -> str:
     patent_df = return_patent(patent_number)
     passage_embedding = return_embeddings([input_passage])
-    searched_patent_embeddings = return_embeddings(
-        patent_df["clean_paragraphs"].to_list()
-    )
+    searched_patent_embeddings = return_embeddings(patent_df["clean_text"].to_list())
     similarities = cosine_similarity(passage_embedding, searched_patent_embeddings)
     most_relevant_passage_index = np.argmax(similarities)
-    return patent_df.iloc[most_relevant_passage_index]["clean_paragraphs"]
+    return patent_df.iloc[most_relevant_passage_index]["clean_text"]
 
 
 def return_patent(patent_number: str) -> pd.DataFrame:
