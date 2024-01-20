@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from src.return_similar_passages import return_most_relevant_passage
+from API.src.process_text import return_most_relevant_passage
 
 app = FastAPI()
 
